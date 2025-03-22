@@ -48,16 +48,13 @@ namespace ImageProcessingTool
             pictureBox.Paint += PictureBox_Paint;
             pictureBox.MouseWheel += PictureBox_MouseWheel;
 
-            // 设置窗体启动时全屏
-            this.WindowState = FormWindowState.Maximized;
-            this.FormBorderStyle = FormBorderStyle.None;
             this.Load += Form1_LoadHandler;
         }
 
         private void Form1_LoadHandler(object sender, EventArgs e)
         {
-            // 设置全屏
-            this.Bounds = Screen.PrimaryScreen.Bounds;
+            // 设置窗体位置和大小
+            this.Bounds = new Rectangle(100, 100, 800, 600);
         }
 
         private void btnSelectFolder_Click(object sender, EventArgs e)
