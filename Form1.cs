@@ -15,8 +15,9 @@ namespace ImageProcessingTool
         private Graphics graphics;
         private bool isCtrlPressed;
         private bool isDrawing;
-        private bool isErasing;
         private Point lastPoint;
+        private int brushSizeCurrent;
+        private int brushSizeCircle;
         private int brushSize;
         private BrushType currentBrush;
         private float zoomFactor = 1.0f;
@@ -30,10 +31,15 @@ namespace ImageProcessingTool
             currentImageIndex = -1;
             isCtrlPressed = false;
             isDrawing = false;
-            isErasing = false;
             lastPoint = Point.Empty;
-            brushSize = 15;
+            brushSizeCurrent = 15;
+            brushSizeCircle = 15;
+            brushSize = brushSizeCurrent;
             currentBrush = BrushType.Circle;
+
+            // 启用双缓冲
+            this.SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.DoubleBuffer, true);
+
             pictureBox.MouseDown += PictureBox_MouseDown;
             pictureBox.MouseMove += PictureBox_MouseMove;
             pictureBox.MouseUp += PictureBox_MouseUp;
@@ -41,6 +47,17 @@ namespace ImageProcessingTool
             KeyUp += Form1_KeyUp;
             pictureBox.Paint += PictureBox_Paint;
             pictureBox.MouseWheel += PictureBox_MouseWheel;
+
+            // 设置窗体启动时全屏
+            this.WindowState = FormWindowState.Maximized;
+            this.FormBorderStyle = FormBorderStyle.None;
+            this.Load += Form1_LoadHandler;
+        }
+
+        private void Form1_LoadHandler(object sender, EventArgs e)
+        {
+            // 设置全屏
+            this.Bounds = Screen.PrimaryScreen.Bounds;
         }
 
         private void btnSelectFolder_Click(object sender, EventArgs e)
@@ -143,9 +160,11 @@ namespace ImageProcessingTool
                     break;
                 case Keys.Q:
                     currentBrush = BrushType.Circle;
+                    brushSize = brushSizeCurrent;
                     break;
                 case Keys.W:
                     currentBrush = BrushType.Ring;
+                    brushSize = brushSizeCircle;
                     break;
                 case Keys.Z:
                     btnUndo.PerformClick();
@@ -168,8 +187,7 @@ namespace ImageProcessingTool
             if (e.Button == MouseButtons.Left)
             {
                 isDrawing = true;
-                PointF transformedPoint = TransformToImageCoordinates(e.Location);
-                lastPoint = Point.Round(transformedPoint); // 使用 Point.Round 将 PointF 转换为 Point
+                lastPoint = Point.Round(TransformToImageCoordinates(e.Location));
                 SaveUndoState();
             }
         }
@@ -178,9 +196,9 @@ namespace ImageProcessingTool
         {
             if (isDrawing)
             {
-                PointF transformedPoint = TransformToImageCoordinates(e.Location);
-                Draw(Point.Round(transformedPoint)); // 使用 Point.Round 将 PointF 转换为 Point
-                lastPoint = Point.Round(transformedPoint);
+                PointF currentPoint = TransformToImageCoordinates(e.Location);
+                DrawCircle(Point.Round(currentPoint));
+                lastPoint = Point.Round(currentPoint);
             }
         }
 
@@ -192,26 +210,43 @@ namespace ImageProcessingTool
             }
         }
 
-        private void trackBarBrushSize_Scroll(object sender, EventArgs e)
+        private void trackBarBrushCurrent_Scroll(object sender, EventArgs e)
         {
-            brushSize = trackBarBrushSize.Value;
+            brushSizeCurrent = trackBarBrushCurrent.Value;
+            if (currentBrush == BrushType.Circle)
+            {
+                brushSize = brushSizeCurrent;
+            }
         }
 
-        private void Draw(Point location)
+        private void trackBarBrushCircle_Scroll(object sender, EventArgs e)
+        {
+            brushSizeCircle = trackBarBrushCircle.Value;
+            if (currentBrush == BrushType.Ring)
+            {
+                brushSize = brushSizeCircle;
+            }
+        }
+
+        private void comboBoxBrushSelection_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (comboBoxBrushSelection.SelectedIndex == 0)
+            {
+                currentBrush = BrushType.Circle;
+                brushSize = brushSizeCurrent;
+            }
+            else if (comboBoxBrushSelection.SelectedIndex == 1)
+            {
+                currentBrush = BrushType.Ring;
+                brushSize = brushSizeCircle;
+            }
+        }
+
+        private void DrawCircle(Point center)
         {
             using (Pen pen = new Pen(Color.Red, brushSize))
             {
-                switch (currentBrush)
-                {
-                    case BrushType.Circle:
-                        graphics.FillEllipse(pen.Brush, location.X - brushSize / 2, location.Y - brushSize / 2, brushSize, brushSize);
-                        break;
-                    case BrushType.Ring:
-                        graphics.DrawEllipse(pen, location.X - brushSize / 2, location.Y - brushSize / 2, brushSize, brushSize);
-                        break;
-                    default:
-                        break;
-                }
+                graphics.DrawEllipse(pen, center.X - brushSize / 2, center.Y - brushSize / 2, brushSize, brushSize);
                 pictureBox.Invalidate();
             }
         }
@@ -230,7 +265,7 @@ namespace ImageProcessingTool
 
         private PointF TransformToImageCoordinates(Point point)
         {
-            if (currentImage == null)
+            if (pictureBox.Image == null)
                 return PointF.Empty;
 
             float x = (point.X - imageOffset.X) / zoomFactor;
@@ -241,42 +276,45 @@ namespace ImageProcessingTool
 
         private void PictureBox_Paint(object sender, PaintEventArgs e)
         {
-            if (currentImage != null)
+            if (pictureBox.Image != null)
             {
-                e.Graphics.DrawImage(currentImage, imageOffset.X, imageOffset.Y, currentImage.Width * zoomFactor, currentImage.Height * zoomFactor);
+                e.Graphics.DrawImage(pictureBox.Image, imageOffset.X, imageOffset.Y, pictureBox.Image.Width * zoomFactor, pictureBox.Image.Height * zoomFactor);
             }
         }
 
         private void PictureBox_MouseWheel(object sender, MouseEventArgs e)
         {
-            if (isCtrlPressed)
+            // 获取鼠标在图片上的位置
+            PointF mousePosInImage = TransformToImageCoordinates(e.Location);
+
+            // 更新缩放因子
+            float oldZoomFactor = zoomFactor;
+            if (e.Delta > 0)
             {
-                float zoomDelta = 0.1f; // 缩放步长
-                if (e.Delta > 0)
-                {
-                    zoomFactor += zoomDelta;
-                }
-                else
-                {
-                    zoomFactor -= zoomDelta;
-                    if (zoomFactor < 0.1f) // 防止缩放比例过小
-                        zoomFactor = 0.1f;
-                }
-
-                // 更新偏移量，保持鼠标位置不变
-                Point mousePos = new Point(e.X, e.Y);
-                PointF oldMousePosInImage = TransformToImageCoordinates(mousePos);
-                imageOffset.X = e.X - oldMousePosInImage.X * zoomFactor;
-                imageOffset.Y = e.Y - oldMousePosInImage.Y * zoomFactor;
-
-                pictureBox.Invalidate(); // 重新绘制图片
+                zoomFactor *= 1.1f;
             }
-        }
-    }
+            else if (e.Delta < 0)
+            {
+                zoomFactor *= 0.9f;
+            }
 
-    public enum BrushType
-    {
-        Circle,
-        Ring
+            // 限制最小缩放比例
+            if (zoomFactor < 0.1f)
+            {
+                zoomFactor = 0.1f;
+            }
+
+            // 更新偏移量，保持鼠标位置不变
+            imageOffset.X = e.Location.X - mousePosInImage.X * zoomFactor;
+            imageOffset.Y = e.Location.Y - mousePosInImage.Y * zoomFactor;
+
+            pictureBox.Invalidate();
+        }
+
+        public enum BrushType
+        {
+            Circle,
+            Ring
+        }
     }
 }
