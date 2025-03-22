@@ -41,9 +41,9 @@ namespace ImageProcessingTool
             // btnSelectFolder
             // 
             this.btnSelectFolder.Location = new System.Drawing.Point(15, 13);
-            this.btnSelectFolder.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnSelectFolder.Margin = new System.Windows.Forms.Padding(4);
             this.btnSelectFolder.Name = "btnSelectFolder";
-            this.btnSelectFolder.Size = new System.Drawing.Size(96, 28);
+            this.btnSelectFolder.Size = new System.Drawing.Size(155, 46);
             this.btnSelectFolder.TabIndex = 0;
             this.btnSelectFolder.Text = "选择文件夹";
             this.btnSelectFolder.UseVisualStyleBackColor = true;
@@ -51,10 +51,10 @@ namespace ImageProcessingTool
             // 
             // pictureBox
             // 
-            this.pictureBox.Location = new System.Drawing.Point(13, 151);
-            this.pictureBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.pictureBox.Location = new System.Drawing.Point(34, 224);
+            this.pictureBox.Margin = new System.Windows.Forms.Padding(4);
             this.pictureBox.Name = "pictureBox";
-            this.pictureBox.Size = new System.Drawing.Size(998, 476);
+            this.pictureBox.Size = new System.Drawing.Size(1590, 942);
             this.pictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox.TabIndex = 1;
             this.pictureBox.TabStop = false;
@@ -64,10 +64,10 @@ namespace ImageProcessingTool
             // 
             // btnSaveNext
             // 
-            this.btnSaveNext.Location = new System.Drawing.Point(120, 13);
-            this.btnSaveNext.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnSaveNext.Location = new System.Drawing.Point(178, 13);
+            this.btnSaveNext.Margin = new System.Windows.Forms.Padding(4);
             this.btnSaveNext.Name = "btnSaveNext";
-            this.btnSaveNext.Size = new System.Drawing.Size(109, 28);
+            this.btnSaveNext.Size = new System.Drawing.Size(168, 46);
             this.btnSaveNext.TabIndex = 2;
             this.btnSaveNext.Text = "保存并下一张";
             this.btnSaveNext.UseVisualStyleBackColor = true;
@@ -75,10 +75,10 @@ namespace ImageProcessingTool
             // 
             // btnUndo
             // 
-            this.btnUndo.Location = new System.Drawing.Point(237, 13);
-            this.btnUndo.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnUndo.Location = new System.Drawing.Point(354, 13);
+            this.btnUndo.Margin = new System.Windows.Forms.Padding(4);
             this.btnUndo.Name = "btnUndo";
-            this.btnUndo.Size = new System.Drawing.Size(109, 28);
+            this.btnUndo.Size = new System.Drawing.Size(168, 46);
             this.btnUndo.TabIndex = 3;
             this.btnUndo.Text = "撤销上一步";
             this.btnUndo.UseVisualStyleBackColor = true;
@@ -86,10 +86,10 @@ namespace ImageProcessingTool
             // 
             // btnReset
             // 
-            this.btnReset.Location = new System.Drawing.Point(354, 13);
-            this.btnReset.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnReset.Location = new System.Drawing.Point(530, 13);
+            this.btnReset.Margin = new System.Windows.Forms.Padding(4);
             this.btnReset.Name = "btnReset";
-            this.btnReset.Size = new System.Drawing.Size(109, 28);
+            this.btnReset.Size = new System.Drawing.Size(168, 46);
             this.btnReset.TabIndex = 4;
             this.btnReset.Text = "撤销所有操作";
             this.btnReset.UseVisualStyleBackColor = true;
@@ -101,8 +101,8 @@ namespace ImageProcessingTool
             this.comboBoxBrushSelection.Items.AddRange(new object[] {
             "当前画笔",
             "圆形画笔"});
-            this.comboBoxBrushSelection.Location = new System.Drawing.Point(702, 56);
-            this.comboBoxBrushSelection.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.comboBoxBrushSelection.Location = new System.Drawing.Point(797, 75);
+            this.comboBoxBrushSelection.Margin = new System.Windows.Forms.Padding(4);
             this.comboBoxBrushSelection.Name = "comboBoxBrushSelection";
             this.comboBoxBrushSelection.Size = new System.Drawing.Size(154, 26);
             this.comboBoxBrushSelection.TabIndex = 6;
@@ -110,8 +110,8 @@ namespace ImageProcessingTool
             // 
             // trackBarBrushCurrent
             // 
-            this.trackBarBrushCurrent.Location = new System.Drawing.Point(879, 13);
-            this.trackBarBrushCurrent.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.trackBarBrushCurrent.Location = new System.Drawing.Point(974, 32);
+            this.trackBarBrushCurrent.Margin = new System.Windows.Forms.Padding(4);
             this.trackBarBrushCurrent.Maximum = 100;
             this.trackBarBrushCurrent.Minimum = 1;
             this.trackBarBrushCurrent.Name = "trackBarBrushCurrent";
@@ -122,8 +122,8 @@ namespace ImageProcessingTool
             // 
             // trackBarBrushCircle
             // 
-            this.trackBarBrushCircle.Location = new System.Drawing.Point(879, 74);
-            this.trackBarBrushCircle.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.trackBarBrushCircle.Location = new System.Drawing.Point(974, 93);
+            this.trackBarBrushCircle.Margin = new System.Windows.Forms.Padding(4);
             this.trackBarBrushCircle.Maximum = 100;
             this.trackBarBrushCircle.Minimum = 1;
             this.trackBarBrushCircle.Name = "trackBarBrushCircle";
@@ -136,7 +136,7 @@ namespace ImageProcessingTool
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1463, 983);
+            this.ClientSize = new System.Drawing.Size(1720, 1260);
             this.Controls.Add(this.trackBarBrushCircle);
             this.Controls.Add(this.trackBarBrushCurrent);
             this.Controls.Add(this.comboBoxBrushSelection);
@@ -145,7 +145,7 @@ namespace ImageProcessingTool
             this.Controls.Add(this.btnSaveNext);
             this.Controls.Add(this.pictureBox);
             this.Controls.Add(this.btnSelectFolder);
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "Form1";
             this.Text = "图片处理工具";
             this.Load += new System.EventHandler(this.Form1_LoadHandler);

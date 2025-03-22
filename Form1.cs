@@ -241,7 +241,7 @@ namespace ImageProcessingTool
 
         private void DrawCircle(Point center)
         {
-            using (Pen pen = new Pen(Color.Red, brushSize))
+            using (Pen pen = new Pen(Color.Black, brushSize))
             {
                 graphics.DrawEllipse(pen, center.X - brushSize / 2, center.Y - brushSize / 2, brushSize, brushSize);
                 pictureBox.Invalidate();
